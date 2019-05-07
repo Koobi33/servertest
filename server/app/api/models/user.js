@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+
 
 var UserSchema = new mongoose.Schema({
    email: {
@@ -43,12 +42,11 @@ UserSchema.static.authenticate = function(email, password, callback) {
 
 UserSchema.pre('save', function (next) {
    var user = this;
-   bcrypt.hash(user.password, saltRounds, function (err, hash) {
+   bcrypt.hash(user.password, function (err, hash) {
        if (err)
        {
            return next(err);
        }
-       user.password = hash;
        next();
    })
 });
